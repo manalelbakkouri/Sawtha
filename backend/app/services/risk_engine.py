@@ -44,10 +44,10 @@ class RiskEngine:
             triggered.append("No danger sign detected from the current check-in")
 
         action = {
-            "green": "Continue routine follow-up and keep the next scheduled check.",
-            "orange": "Create a follow-up task for the midwife and confirm symptoms.",
-            "red": "Notify assigned health worker and trusted family member immediately.",
-            "red_critical": "Escalate immediately: notify trusted family member, assigned health worker, and prepare transport."
+            "green":        "الحالة ديالك باينة مستقرة دابا. كمّلي المتابعة ديالك عادي، و إلا حسيتي بأي تغيير بحال الدم، السخانة، وجع قوي، ولا نقص فحركة البيبي، عاودي تواصلي معانا.",
+            "orange":       "كاينين بعض الأعراض خاصهم يتراقبو. حاولي ترتاحي، شربي الماء، و خليك قريبة من التليفون. إلا زاد الوجع، طلعات السخانة، بان الدم، ولا البيبي نقصات حركتو، خاصك تتواصلي مع القابلة ولا تمشي للمركز الصحي.",
+            "red":          "كاين واحد العلامة اللي خاصها اهتمام طبي. عافاك ما تبقايش بوحدك، عيطي لشي قريب منك، و تواصلي مع القابلة ولا المركز الصحي فالقريب. غادي يتم تنبيه الشخص المسؤول باش يساعدك.",
+            "red_critical": "كاين واحد العلامة اللي خاصها اهتمام طبي. عافاك ما تبقايش بوحدك، عيطي لشي قريب منك، و تواصلي مع القابلة ولا المركز الصحي فالقريب. غادي يتم تنبيه الشخص المسؤول باش يساعدك.",
         }[risk]
 
         return RiskResult(

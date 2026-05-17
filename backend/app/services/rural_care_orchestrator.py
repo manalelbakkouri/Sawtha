@@ -1,3 +1,4 @@
+import os
 from datetime import datetime, timezone
 from app.data_loader import find_by_id, append_record
 from app.services.care_plan_service import CarePlanService
@@ -8,13 +9,19 @@ from app.services.report_generator import ReportGenerator
 from app.services.alert_service import AlertService
 from app.schemas import AnalyzeResponse
 
+USE_LLM = os.environ.get("USE_LLM_EXTRACTION", "false").lower() == "true"
+
 
 class RuralCareOrchestrator:
     """Lightweight MVP workflow brain, not a separate microservice for tonight."""
 
     def __init__(self):
         self.care_plan_service = CarePlanService()
-        self.ai_extraction = AIExtractionService()
+        if USE_LLM:
+            from app.services.ai.llm_extraction import LLMExtractionService
+            self.ai_extraction = LLMExtractionService()
+        else:
+            self.ai_extraction = AIExtractionService()
         self.risk_engine = RiskEngine()
         self.rural_scoring = RuralScoringService()
         self.report_generator = ReportGenerator()

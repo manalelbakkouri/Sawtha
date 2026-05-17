@@ -1,8 +1,11 @@
-from fastapi import FastAPI, HTTPException
+import os
+from fastapi import FastAPI, HTTPException, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
 from app.data_loader import list_records, find_by_id
 from app.schemas import CheckinAnalyzeRequest
 from app.services.rural_care_orchestrator import RuralCareOrchestrator
+from dotenv import load_dotenv
+load_dotenv()
 
 app = FastAPI(title="Tbibti MVP API", description="Rural Maternal Care Coordination AI", version="0.1.0")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
@@ -15,6 +18,13 @@ def root():
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
+@app.get("/medical-staff/{staff_id}")
+def get_staff(staff_id: str):
+    staff = find_by_id("medical_staff.json", staff_id)
+    if not staff:
+        raise HTTPException(status_code=404, detail="Staff not found")
+    return staff
 
 @app.get("/patients")
 def get_patients():
@@ -50,6 +60,53 @@ def get_alerts():
 @app.get("/reports")
 def get_reports():
     return list_records("generated_reports.json")
+
+@app.post("/agent/analyze")
+def agent_analyze(payload: CheckinAnalyzeRequest):
+    from app.services.agent.tbibti_agent import TibtiAgent
+    try:
+        return TibtiAgent().run(payload.patient_id, payload.message)
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc))
+
+
+@app.post("/agent/analyze-audio")
+async def agent_analyze_audio(
+    patient_id: str = Form(...),
+    audio: UploadFile = File(...),
+):
+    from app.services.ai.whisper_service import WhisperService
+    from app.services.agent.tbibti_agent import TibtiAgent
+    audio_bytes = await audio.read()
+    try:
+        transcript = WhisperService().transcribe(audio_bytes, filename=audio.filename or "audio.webm")
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Transcription failed: {exc}")
+    try:
+        result = TibtiAgent().run(patient_id, transcript)
+        data = result.model_dump()
+        data["transcript"] = transcript
+        return data
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc))
+
+
+@app.post("/checkins/analyze-audio")
+async def analyze_audio(
+    patient_id: str = Form(...),
+    audio: UploadFile = File(...),
+):
+    from app.services.ai.whisper_service import WhisperService
+    audio_bytes = await audio.read()
+    try:
+        transcript = WhisperService().transcribe(audio_bytes, filename=audio.filename or "audio.webm")
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Transcription failed: {exc}")
+    try:
+        return orchestrator.run_checkin(patient_id, transcript, source="voice_recording")
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc))
+
 
 @app.get("/dashboard/metrics")
 def dashboard_metrics():
