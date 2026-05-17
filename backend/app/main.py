@@ -7,13 +7,13 @@ from app.services.rural_care_orchestrator import RuralCareOrchestrator
 from dotenv import load_dotenv
 load_dotenv()
 
-app = FastAPI(title="Tbibti MVP API", description="Rural Maternal Care Coordination AI", version="0.1.0")
+app = FastAPI(title="SAWTHA API", description="Rural Maternal Care Coordination AI", version="0.1.0")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 orchestrator = RuralCareOrchestrator()
 
 @app.get("/")
 def root():
-    return {"project": "Tbibti", "status": "running", "message": "Rural Maternal Care Coordination AI MVP"}
+    return {"project": "SAWTHA", "status": "running", "message": "Rural Maternal Care Coordination AI"}
 
 @app.get("/health")
 def health():
