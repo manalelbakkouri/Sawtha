@@ -1,0 +1,5 @@
+[
+  {"id": "TP001", "full_name": "Hassan Benali", "relation": "husband", "phone": "+212600000001", "availability": "unknown"},
+  {"id": "TP002", "full_name": "Meriem El Amrani", "relation": "sister", "phone": "+212600000002", "availability": "available"},
+  {"id": "TP003", "full_name": "Khadija Ouali", "relation": "mother", "phone": "+212600000003", "availability": "available"}
+]

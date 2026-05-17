@@ -1,0 +1,27 @@
+[
+  {
+    "patient_id": "P001",
+    "checkin_frequency": "weekly",
+    "questions": [
+      {"id": "q1", "text_darija": "Wach bébé kayt7rek bhal l3ada?", "expected_signal": "fetal_movement"},
+      {"id": "q2", "text_darija": "Wach kayn chi dem?", "expected_signal": "bleeding"},
+      {"id": "q3", "text_darija": "Wach kayn wje3 qwi f kerch?", "expected_signal": "abdominal_pain"},
+      {"id": "q4", "text_darija": "Wach 3andk chi wa7ed yqder ydik l centre?", "expected_signal": "transport"}
+    ],
+    "red_flags": ["no_fetal_movement", "bleeding", "severe_abdominal_pain"],
+    "orange_flags": ["fever", "dizziness", "missed_checkup"],
+    "escalation_threshold": "red"
+  },
+  {
+    "patient_id": "P002",
+    "checkin_frequency": "weekly",
+    "questions": [
+      {"id": "q1", "text_darija": "Wach nti bikhir lyoma?", "expected_signal": "general_state"},
+      {"id": "q2", "text_darija": "Wach kayn dawakh wla skhana?", "expected_signal": "fever_dizziness"},
+      {"id": "q3", "text_darija": "Wach bébé kayt7rek bhal l3ada?", "expected_signal": "fetal_movement"}
+    ],
+    "red_flags": ["bleeding", "no_fetal_movement"],
+    "orange_flags": ["dizziness", "fever", "fatigue"],
+    "escalation_threshold": "orange"
+  }
+]
